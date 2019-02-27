@@ -50,6 +50,10 @@ robot_state_publisher::DynamicJointStateListener::DynamicJointStateListener(
   const Tree &tree, const MimicMap &m, const urdf::Model &model)
   : JointStateListener(tree, m, model), dynamicPublisher(&state_publisher_)
 {
+  ROS_INFO("Robot model loaded, it has %lu moving joints and "
+           "%lu fixed joints.", dynamicPublisher.getNumMovingJoints(),
+           dynamicPublisher.getNumFixedJoints());
+
   dynparamServer.setCallback(boost::bind(
     &robot_state_publisher::DynamicJointStateListener::configChangedCb,
     this, _1, _2));
@@ -85,14 +89,17 @@ bool robot_state_publisher::DynamicJointStateListener::reloadRobotModel(
 void robot_state_publisher::DynamicJointStateListener::callbackJointState(
   const JointStateConstPtr &state)
 {
-  while (updateOngoing.try_lock())
+  if (updateOngoing.try_lock())
+  {
+    JointStateListener::callbackJointState(state);
+    updateOngoing.unlock();
+  }
+  else
   {
     ROS_WARN_THROTTLE(1, "Skipping joint state while robot model is being "
                          "updated.");
     return;
   }
-
-  JointStateListener::callbackJointState(state);
 }
 
 void robot_state_publisher::DynamicJointStateListener::configChangedCb(
