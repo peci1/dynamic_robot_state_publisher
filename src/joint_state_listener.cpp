@@ -34,7 +34,6 @@ bool robot_state_publisher::DynamicJointStateListener::loadTreeAndMimicMap(
   }
 
   mimic_map->clear();
-  std::map< std::string, boost::shared_ptr< urdf::Joint > >::iterator it;
   for (const auto &joint : model.joints_)
   {
     if (joint.second->mimic)
