@@ -40,16 +40,17 @@ public:
 
   /**
    * \brief Parses the given URDF string (or `robot_description` param if the
-   *        string is empty) to a KDL tree and a mimic map.
+   *        string is empty) to a KDL tree, URDF model and a mimic map.
    * \param [out] tree The parsed KDL tree.
    * \param [out] mimic_map The parsed mimic map.
+   * \param [out] The parsed URDF model.
    * \param [in] urdf If empty, parse the model from (static) param
    *                  `robot_description`, otherwise parse it from the given
    *                  string.
    * \return True if the model was correctly read and parsed.
    */
-  static bool loadTreeAndMimicMap(KDL::Tree& tree, MimicMap *mimic_map,
-    const std::string &urdf = "");
+  static bool loadModel(KDL::Tree &tree, MimicMap &mimic_map,
+                        urdf::Model &model, const std::string &urdf = "");
 
 protected:
   /**

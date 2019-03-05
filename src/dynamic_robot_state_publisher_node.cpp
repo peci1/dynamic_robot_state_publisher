@@ -10,26 +10,15 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "robot_state_publisher");
   NodeHandle node;
 
-  // gets the location of the robot description on the parameter server
   urdf::Model model;
-  if (!model.initParam("robot_description"))
-    return 1;
-
   KDL::Tree tree;
-  if (!kdl_parser::treeFromUrdfModel(model, tree)) {
-    ROS_ERROR("Failed to extract kdl tree from xml robot description");
-    return 1;
-  }
-
   MimicMap mimic;
+  robot_state_publisher::DynamicJointStateListener::loadModel(
+      tree, mimic, model, "");
 
-  for(const auto& joint : model.joints_) {
-    if(joint.second->mimic) {
-      mimic.insert(make_pair(joint.first, joint.second->mimic));
-    }
-  }
+  robot_state_publisher::DynamicJointStateListener state_publisher(
+      tree, mimic, model);
 
-  robot_state_publisher::DynamicJointStateListener state_publisher(tree, mimic, model);
   ros::spin();
 
   return 0;

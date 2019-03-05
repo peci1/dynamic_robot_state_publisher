@@ -2,11 +2,10 @@
 
 #include <kdl_parser/kdl_parser.hpp>
 
-bool robot_state_publisher::DynamicJointStateListener::loadTreeAndMimicMap(
-  KDL::Tree& tree, MimicMap *mimic_map, const std::string &urdf)
+bool robot_state_publisher::DynamicJointStateListener::loadModel(KDL::Tree &tree,
+    MimicMap &mimic_map, urdf::Model &model, const std::string &urdf)
 {
   // gets the location of the robot description on the parameter server
-  urdf::Model model;
   bool found;
   if (urdf.empty())
   {
@@ -33,12 +32,12 @@ bool robot_state_publisher::DynamicJointStateListener::loadTreeAndMimicMap(
     return false;
   }
 
-  mimic_map->clear();
+  mimic_map.clear();
   for (const auto &joint : model.joints_)
   {
     if (joint.second->mimic)
     {
-      mimic_map->insert(make_pair(joint.first, joint.second->mimic));
+      mimic_map.insert(make_pair(joint.first, joint.second->mimic));
     }
   }
 
@@ -70,9 +69,10 @@ bool robot_state_publisher::DynamicJointStateListener::reloadRobotModel(
   publish_interval_.sleep();       /// allow publishFixedTransforms to end
 
   KDL::Tree tree;
+  urdf::Model model;
   mimic_.clear();
 
-  if (!loadTreeAndMimicMap(tree, &mimic_, urdf))
+  if (!loadModel(tree, mimic_, model, urdf))
     return false;
 
   dynamicPublisher.updateTree(tree);

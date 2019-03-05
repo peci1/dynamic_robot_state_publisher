@@ -11,6 +11,10 @@ namespace robot_state_publisher
 class DynamicRobotStatePublisher
 {
 public:
+  /** \brief The TF frame name of the virtual frame that's parent of all
+   * deleted static TF frames. */
+  const std::string DELETED_STATIC_TFS_FRAME = "__deleted_static_tfs__";
+
   /**
    * \brief Create the publisher.
    * \param [in] publisher The underlying RobotStatePublisher that is hijacked.

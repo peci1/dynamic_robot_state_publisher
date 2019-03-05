@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>dynamic_robot_state_publisher</name>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <description>Improved ROS robot_state_publisher which can update the robot model via dynamic_reconfigure.</description>
   <license>BSD</license>
 

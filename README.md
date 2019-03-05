@@ -18,6 +18,13 @@ This package was created as one of the workarounds to issue [Reload robot model 
 If you read that issue, you learn that this problem is quite complex and this package is a solution just to a subclass of the problems.
 E.g. 3rd party packages do not expect the `robot_description` parameter to change, and so you have to somehow tell them to do so (e.g. by restarting their nodes).
 
+One of the things that this package does and is probably aginst good practices is
+it tries to delete static transforms that disappeared after model reload. This
+deletion is implemented by reconnecting the frames to virtual frame 
+`DynamicRobotStatePublisher::DELETED_STATIC_TFS_FRAME`. This effectively breaks the
+assumption that a static TF is valid all the time. These static TFs are not. You 
+have to count with that in the rest of your codebase.
+
 ## Alternatives
 
 * https://github.com/ros/robot_state_publisher/pull/31 (Adds a `TriggerService`) which you can call to reload the model from param server.
