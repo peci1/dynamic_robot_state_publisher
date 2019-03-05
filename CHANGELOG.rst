@@ -2,8 +2,8 @@
 Changelog for package dynamic_robot_state_publisher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.1 (2019-03-05)
+------------------
 * Allowed deleting static TF frames that disappeared.
 * Fixed deadlock.
 * Contributors: Martin Pecka
