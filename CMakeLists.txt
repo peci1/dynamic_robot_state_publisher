@@ -20,7 +20,10 @@ catkin_package(
 # catkin_package LIBRARIES, so we have to find and add it ourselves
 find_library(JOINT_STATE_LISTENER_LIB joint_state_listener HINTS ${catkin_LIBRARY_DIRS})
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(
+  include 
+  ${catkin_INCLUDE_DIRS}
+)
 
 add_executable(${PROJECT_NAME} src/dynamic_robot_state_publisher_node.cpp src/joint_state_listener.cpp src/robot_state_publisher.cpp)
 add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

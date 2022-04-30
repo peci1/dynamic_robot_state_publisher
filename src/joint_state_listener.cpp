@@ -45,8 +45,8 @@ bool robot_state_publisher::DynamicJointStateListener::loadModel(KDL::Tree &tree
 }
 
 robot_state_publisher::DynamicJointStateListener::DynamicJointStateListener(
-  const Tree &tree, const MimicMap &m, const urdf::Model &model)
-  : JointStateListener(tree, m, model), dynamicPublisher(&state_publisher_)
+  const KDL::Tree &tree, const MimicMap &m, const urdf::Model &model)
+  : JointStateListener(tree, m, model), dynamicPublisher(state_publisher_)
 {
   ROS_INFO("Robot model loaded, it has %lu moving joints and "
            "%lu fixed joints.", dynamicPublisher.getNumMovingJoints(),

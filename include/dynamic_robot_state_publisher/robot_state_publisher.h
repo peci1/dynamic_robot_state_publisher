@@ -19,7 +19,7 @@ public:
    * \brief Create the publisher.
    * \param [in] publisher The underlying RobotStatePublisher that is hijacked.
    */
-  explicit DynamicRobotStatePublisher(RobotStatePublisher *publisher);
+  explicit DynamicRobotStatePublisher(const std::shared_ptr<robot_state_publisher::RobotStatePublisher>& publisher);
 
   /**
    * \brief Sets the robot model.
@@ -41,7 +41,7 @@ public:
 
 protected:
   /** \brief The underlying (hacked) publisher. */
-  RobotStatePublisher *publisher;
+  std::shared_ptr<RobotStatePublisher> publisher;
 };
 }
 

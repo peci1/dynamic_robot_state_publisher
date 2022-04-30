@@ -28,7 +28,7 @@ public:
    * \param [in] model URDF model.
    */
   DynamicJointStateListener(
-    const Tree &tree, const MimicMap &m, const urdf::Model &model);
+    const KDL::Tree &tree, const MimicMap &m, const urdf::Model &model);
 
   /**
    * \brief Reload the robot model.

@@ -52,7 +52,7 @@ void robot_state_publisher::DynamicRobotStatePublisher::updateTree(const KDL::Tr
 }
 
 robot_state_publisher::DynamicRobotStatePublisher::DynamicRobotStatePublisher(
-  robot_state_publisher::RobotStatePublisher *publisher) : publisher(publisher)
+  const std::shared_ptr<RobotStatePublisher>& publisher) : publisher(publisher)
 {}
 
 size_t robot_state_publisher::DynamicRobotStatePublisher::getNumMovingJoints() const
