@@ -4,6 +4,7 @@
 #include <mutex>
 
 #include <dynamic_reconfigure/server.h>
+#include <kdl/tree.hpp>
 
 #include <robot_state_publisher/joint_state_listener.h>
 #include <dynamic_robot_state_publisher/robot_state_publisher.h>
@@ -28,7 +29,7 @@ public:
    * \param [in] model URDF model.
    */
   DynamicJointStateListener(
-    const Tree &tree, const MimicMap &m, const urdf::Model &model);
+    const KDL::Tree &tree, const MimicMap &m, const urdf::Model &model);
 
   /**
    * \brief Reload the robot model.
@@ -60,13 +61,17 @@ protected:
   void callbackJointState(const JointStateConstPtr &state) override;
 
   /** \brief Mutex for updates. */
-  std::mutex updateOngoing;
+	boost::recursive_mutex updateOngoing;
 
+	DynamicRobotStatePublisher& getDynamicPublisher();
+
+#if !ROS_VERSION_MINIMUM(1, 15, 0)
   /** \brief The RobotStatePublisher with update functionality. */
   DynamicRobotStatePublisher dynamicPublisher;
+#endif
 
   /** \brief The dynamic parameter server. */
-  dynamic_reconfigure::Server<DynamicRobotStateConfig> dynparamServer;
+  dynamic_reconfigure::Server<DynamicRobotStateConfig> dynparamServer {updateOngoing};
 
   /**
    * \brief The callback that is called whenever the dynamic robot model changes.

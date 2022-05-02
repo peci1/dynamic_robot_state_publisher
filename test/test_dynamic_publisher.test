@@ -1,0 +1,9 @@
+<launch>
+  <param name="robot_description" textfile="$(dirname)/base_model.urdf" />
+  <param name="more_robot_description" textfile="$(dirname)/more_model.urdf" />
+
+  <node pkg="dynamic_robot_state_publisher" name="dynamic_pub" type="dynamic_robot_state_publisher">
+  </node>
+
+  <test test-name="test_dynamic_publisher" pkg="dynamic_robot_state_publisher" type="test_dynamic_publisher" />
+</launch>

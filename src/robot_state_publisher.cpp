@@ -1,10 +1,17 @@
-// TODO if https://github.com/ros/robot_state_publisher/pull/106 is merged, this hack can be left out
-// HACK we cannot substitute the RobotStatePublisher in JointStateListener, so we hack it like this
+#include <ros/common.h>
+
+// HACK In melodic, we cannot substitute the RobotStatePublisher in JointStateListener, so we hack it like this
+#if !ROS_VERSION_MINIMUM(1, 15, 0)
 #define protected public
+#endif
 #include <robot_state_publisher/robot_state_publisher.h>
+#if !ROS_VERSION_MINIMUM(1, 15, 0)
 #undef protected
+#endif
 
 #include "dynamic_robot_state_publisher/robot_state_publisher.h"
+
+using namespace robot_state_publisher;
 
 std::string stripSlash(const std::string & in)
 {
@@ -20,20 +27,20 @@ void robot_state_publisher::DynamicRobotStatePublisher::updateTree(const KDL::Tr
   /// function is only called from JointStateListener::reload_robot_model
   /// where the update mutex is acquired
 
-  auto old_segments_fixed = publisher->segments_fixed_;
+  auto old_segments_fixed = this->getFixedSegments();
 
-  publisher->segments_.clear();
-  publisher->segments_fixed_.clear();
-  publisher->addChildren(tree.getRootSegment());
+  this->getSegments().clear();
+  this->getFixedSegments().clear();
+  this->addChildren(tree.getRootSegment());
 
   // find out which segments have disappeared and publish a special TF message
   // that disconnects them from the main TF tree
 
-  for (const auto& seg : publisher->segments_fixed_)
+  for (const auto& seg : this->getFixedSegments())
   {
     old_segments_fixed.erase(seg.first);
   }
-  for (const auto& seg : publisher->segments_)
+  for (const auto& seg : this->getSegments())
   {
     old_segments_fixed.erase(seg.first);
   }
@@ -48,19 +55,77 @@ void robot_state_publisher::DynamicRobotStatePublisher::updateTree(const KDL::Tr
     tf.transform.rotation.w = 1.0;
     deleteTfs.push_back(tf);
   }
-  publisher->static_tf_broadcaster_.sendTransform(deleteTfs);
+  this->getStaticTfBroadcaster().sendTransform(deleteTfs);
 }
 
+#if ROS_VERSION_MINIMUM(1, 15, 0)
+robot_state_publisher::DynamicRobotStatePublisher::DynamicRobotStatePublisher(
+	const KDL::Tree& tree, const urdf::Model& model) : robot_state_publisher::RobotStatePublisher(tree, model)
+#else
 robot_state_publisher::DynamicRobotStatePublisher::DynamicRobotStatePublisher(
   robot_state_publisher::RobotStatePublisher *publisher) : publisher(publisher)
-{}
+#endif
+{
+}
 
 size_t robot_state_publisher::DynamicRobotStatePublisher::getNumMovingJoints() const
 {
-  return publisher->segments_.size();
+  return this->getSegments().size();
 }
 
 size_t robot_state_publisher::DynamicRobotStatePublisher::getNumFixedJoints() const
 {
-  return publisher->segments_fixed_.size();
+  return this->getFixedSegments().size();
 }
+
+std::map<std::string, SegmentPair>& robot_state_publisher::DynamicRobotStatePublisher::getSegments()
+{
+#if ROS_VERSION_MINIMUM(1, 15, 0)
+	return this->segments_;
+#else
+	return publisher->segments_;
+#endif
+}
+
+std::map<std::string, SegmentPair>& robot_state_publisher::DynamicRobotStatePublisher::getFixedSegments()
+{
+#if ROS_VERSION_MINIMUM(1, 15, 0)
+	return this->segments_fixed_;
+#else
+	return publisher->segments_fixed_;
+#endif
+}
+
+const std::map<std::string, SegmentPair>& robot_state_publisher::DynamicRobotStatePublisher::getSegments() const
+{
+#if ROS_VERSION_MINIMUM(1, 15, 0)
+	return this->segments_;
+#else
+	return publisher->segments_;
+#endif
+}
+
+const std::map<std::string, SegmentPair>& robot_state_publisher::DynamicRobotStatePublisher::getFixedSegments() const
+{
+#if ROS_VERSION_MINIMUM(1, 15, 0)
+	return this->segments_fixed_;
+#else
+	return publisher->segments_fixed_;
+#endif
+}
+
+tf2_ros::StaticTransformBroadcaster& robot_state_publisher::DynamicRobotStatePublisher::getStaticTfBroadcaster()
+{
+#if ROS_VERSION_MINIMUM(1, 15, 0)
+	return this->static_tf_broadcaster_;
+#else
+	return publisher->static_tf_broadcaster_;
+#endif
+}
+
+#if !ROS_VERSION_MINIMUM(1, 15, 0)
+void robot_state_publisher::DynamicRobotStatePublisher::addChildren(const KDL::SegmentMap::const_iterator segment)
+{
+	publisher->addChildren(segment);
+}
+#endif

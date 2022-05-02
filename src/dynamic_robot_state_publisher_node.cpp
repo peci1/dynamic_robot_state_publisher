@@ -8,11 +8,11 @@ int main(int argc, char** argv)
 {
   // Initialize ros
   ros::init(argc, argv, "robot_state_publisher");
-  NodeHandle node;
+  ros::NodeHandle node;
 
   urdf::Model model;
   KDL::Tree tree;
-  MimicMap mimic;
+  robot_state_publisher::MimicMap mimic;
   robot_state_publisher::DynamicJointStateListener::loadModel(
       tree, mimic, model, "");
 

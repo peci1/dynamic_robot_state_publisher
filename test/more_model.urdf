@@ -1,0 +1,17 @@
+<robot name="test_dynamic_more">
+  <link name="link1" />
+  <link name="link2" />
+  <link name="link3" />
+
+  <joint name="joint1" type="continuous">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="5 0 0" rpy="0 0 1.57" />
+  </joint>
+
+  <joint name="joint2" type="fixed">
+    <parent link="link2"/>
+    <child link="link3"/>
+    <origin xyz="5 0 0" rpy="0 0 1.57" />
+  </joint>
+</robot>
