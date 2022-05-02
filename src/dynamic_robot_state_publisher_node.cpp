@@ -4,6 +4,8 @@
 
 #include <dynamic_robot_state_publisher/joint_state_listener.h>
 
+using namespace robot_state_publisher;
+
 int main(int argc, char** argv)
 {
   // Initialize ros
@@ -12,7 +14,7 @@ int main(int argc, char** argv)
 
   urdf::Model model;
   KDL::Tree tree;
-  robot_state_publisher::MimicMap mimic;
+  MimicMap mimic;
   robot_state_publisher::DynamicJointStateListener::loadModel(
       tree, mimic, model, "");
 
