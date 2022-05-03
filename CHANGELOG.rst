@@ -2,8 +2,8 @@
 Changelog for package dynamic_robot_state_publisher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2022-05-03)
+------------------
 * Added Noetic support (thanks @Kokjix).
 * Contributors: Martin Pecka, Baran Berk Bağcı
 
