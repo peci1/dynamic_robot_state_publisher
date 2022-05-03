@@ -2,6 +2,8 @@
 
 Improved ROS `robot_state_publisher` which can update the robot model via dynamic_reconfigure.
 
+![CI status](https://github.com/peci1/dynamic_robot_state_publisher/actions/workflows/main.yml/badge.svg?branch=master)
+
 ## Nodes
 
 ### dynamic_robot_state_publisher

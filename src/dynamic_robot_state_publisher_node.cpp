@@ -4,11 +4,13 @@
 
 #include <dynamic_robot_state_publisher/joint_state_listener.h>
 
+using namespace robot_state_publisher;
+
 int main(int argc, char** argv)
 {
   // Initialize ros
   ros::init(argc, argv, "robot_state_publisher");
-  NodeHandle node;
+  ros::NodeHandle node;
 
   urdf::Model model;
   KDL::Tree tree;
